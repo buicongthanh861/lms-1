@@ -1,4 +1,4 @@
-// import RichTextEditor from '@/components/RichTextEditor'
+import RichTextEditor from '@/components/RichTextEditor'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -12,11 +12,105 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import { setCourse } from '@/redux/courseSlice'
+import axios from 'axios'
+import { Loader2 } from 'lucide-react'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'sonner'
 
 const CourseTab = () => {
+  const params = useParams()
+  const id = params.courseId
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const {course} = useSelector(store => store.course)
+  const selectCourse = course.find(course => course._id === id)
+
+  const [selectedCourse,setSelectedCourse] = useState(selectCourse)
+  const [loading,setLoading] = useState(false)
+
+  const getCourseById = async()=> {
+    try {
+      const res = await axios.get(`http://localhost:8000/api/v1/course/${id}` , {withCredentials:true})
+      if(res.data.success){
+        setSelectedCourse(res.data.course)
+      }
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+  useEffect(()=> {
+    getCourseById()
+  })
+
+  const [input,setInput] = useState({
+      courseTitle:selectedCourse?.courseTitle,
+      subTitle:selectedCourse?.subTitle,
+      description:selectedCourse?.description,
+      category:selectedCourse?.category,
+      courseLevel:selectedCourse?.courseLevel,
+      coursePrice:selectedCourse?.coursePrice,
+      file:""
+  })
+  const [previewThumbnail,setPreviewThumbnail] = useState(selectedCourse?.Thumbnail)
+
+  const changeEventHandler = (e) => {
+    const {name,value} = e.target;
+    setInput({...input,[name] : value})
+  }
+  const selectCategory = (value)=> {
+      setInput({...input,category:value})
+  }
+
+  const selectCourseLevel = (value)=> {
+    setInput({...input,courseLevel:value})
+  }
+
+  //get file
+  const selectThumbnail = (e) => {
+    const file = e.target.files?.[0];
+    if(file){
+      setInput({...input,courseThumbnail:file});
+      const fileReader = new FileReader()
+      fileReader.onload = () => setPreviewThumbnail(fileReader.result);
+      fileReader.readAsDataURL(file)
+    }
+  }
+
+  const updateCourseHandler = async()=> {
+    const formData = new FormData();
+    formData.append("courseTitle",input.courseTitle);
+    formData.append("subTitle",input.subTitle);
+    formData.append("description",input.description);
+    formData.append("category",input.category);
+    formData.append("courseLevel",input.courseLevel);
+    formData.append("coursePrice",input.coursePrice);
+    formData.append("file",input.courseThumbnail);
+
+    try {
+      setLoading(true)
+      const res = await axios.put(`http://localhost:8000/api/v1/course/${id}` ,formData,{
+        headers: {
+          'Content-Type' : "multipart/form-data"
+        },
+        withCredentials:true
+      })
+      if(res.data.success){
+        navigate(`lecture`)
+        toast.success(res.data.message)
+        dispatch([...course,setCourse(res.data.course)])
+      }
+    } catch (error) {
+      console.log(error);
+
+    }finally{
+      setLoading(false)
+    }
+  }
+
   return (
     <Card>
       <CardHeader className="flex md:flex-row justify-between">
@@ -35,21 +129,21 @@ const CourseTab = () => {
         <div className='space-y-4 mt-5' >
           <div>
             <Label>Title</Label>
-            <Input type="text" name="courseTitle" placeholder="Ex. Fullstack developer"></Input>
+            <Input value={input.courseTitle} onChange= { changeEventHandler} type="text" name="courseTitle" placeholder="Ex. Fullstack developer"></Input>
           </div>
           <div>
             <Label>Subtitle</Label>
-            <Input type="text" name="subTitle" placeholder="Ex. Become a fullstack developer from zero to hero in 2 months"></Input>
+            <Input value={input.subTitle} onChange={changeEventHandler} type="text" name="subTitle" placeholder="Ex. Become a fullstack developer from zero to hero in 2 months"></Input>
           </div>
           <div>
             <Label>Description</Label>
-            {/* <RichTextEditor/> */}
-            <Input type="text" name="Description" placeholder="Ex. Description course"></Input>
+            <RichTextEditor input={input} setInput={setInput}/>
+            {/* <Input input={input} setInput={setInput} type="text" name="Description" placeholder="Ex. Description course"></Input> */}
           </div>
           <div className='flex md:flex-row flex-wrap gap-1 items-center md:gap-5'>
             <div>
               <Label>Category</Label>
-              <Select >
+              <Select defaultValue={input.category} onValueChange={selectCategory}>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
@@ -71,7 +165,7 @@ const CourseTab = () => {
             </div>
             <div>
               <Label>Course Level</Label>
-              <Select >
+              <Select defaultValue={input.courseLevel} onValueChange={selectCourseLevel}>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Select a course level" />
                 </SelectTrigger>
@@ -90,6 +184,8 @@ const CourseTab = () => {
               <Input
               type="number"
               name="coursePrice"
+              value={input.coursePrice}
+              onChange={changeEventHandler}
               placeholder="199"
               className="w-fit"
               />
@@ -100,14 +196,30 @@ const CourseTab = () => {
               <Input
               type="file"
               id="file"
+              onChange={selectThumbnail}
               placeholder="199"
               accept="image/*"
               className="w-fit"
               />
+              {
+                previewThumbnail && (
+                  <img src={previewThumbnail} alt="Thumbnail" className='w-64 my-2' />
+                )
+              }
             </div>
             <div className='flex gap-2'>
               <Button onClick={()=> navigate('/admin/course')} variant="outline">Cancel</Button>
-              <Button className="bg-gray-800">Save</Button>
+              <Button className="bg-gray-800 " disabled={loading} onClick={updateCourseHandler}>
+                {
+                  loading ? (
+                    <>
+                      <Loader2 className='mr-2 w-4 h-4 animate-spin'>
+                        Please wait
+                      </Loader2>
+                    </>
+                  ):("Save")
+                }
+              </Button>
             </div>
         </div>
       </CardContent>

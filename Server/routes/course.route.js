@@ -9,6 +9,6 @@ router.route("/").post(isAuthenticated, createCourse)
 router.route("/published-courses").get(getPublishedCourse)
 router.route("/").get(isAuthenticated, getCreatorCourses)
 router.route("/:courseId").put(isAuthenticated,singleUpload,editCourse)
-router.route("/courseId").get(isAuthenticated,getCourseById)
+router.route("/:courseId").get(isAuthenticated,getCourseById)
 
 export default router;
