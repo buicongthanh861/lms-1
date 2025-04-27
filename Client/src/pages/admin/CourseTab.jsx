@@ -30,6 +30,7 @@ const CourseTab = () => {
 
   const [selectedCourse,setSelectedCourse] = useState(selectCourse)
   const [loading,setLoading] = useState(false)
+  const {publish,setPublish} = useState(false)
 
   const getCourseById = async()=> {
     try {
@@ -111,6 +112,23 @@ const CourseTab = () => {
     }
   }
 
+  const togglePublishUnpublish = async(action)=> {
+    try {
+      const res = await axios.patch(`http://localhost:8000/api/v1/course/${id}`,{
+        params:{
+          action
+        },
+        withCredentials:true
+      })
+      if(res.data.success){
+        setPublish(!publish)
+        toast.success(res.data.message)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <Card>
       <CardHeader className="flex md:flex-row justify-between">
@@ -121,7 +139,7 @@ const CourseTab = () => {
           </CardDescription>
         </div>
         <div className='space-x-2'>
-          <Button className="bg-gray-800">Publish</Button>
+          <Button onClick={()=>togglePublishUnpublish(selectedCourse.isPublished ? "false" : "true")} className="bg-gray-800">{selectedCourse.isPublished ? "UnPublish" : "Publish"}</Button>
           <Button variant="destructive">remove Course</Button>
         </div>
       </CardHeader>

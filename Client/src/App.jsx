@@ -14,6 +14,9 @@ import Dashboard from './pages/admin/Dashboard'
 import Course from './pages/admin/Course'
 import CreateCourse from './pages/admin/CreateCourse'
 import UpdateCourse from './pages/admin/UpdateCourse'
+import CreateLecture from './pages/admin/CreateLecture'
+import EditLecture from './pages/admin/EditLecture'
+import CourseDetails from './pages/CourseDetails'
 
 
 const router = createBrowserRouter([
@@ -38,6 +41,10 @@ const router = createBrowserRouter([
     element:<><Navbar/><Profile/></>
   },
   {
+    path:"/courses/:courseId",
+    element:<><Navbar/><CourseDetails/></>
+  },
+  {
     path:"/admin",
     element:<><Navbar/><Admin/></>,
     children:[
@@ -56,7 +63,15 @@ const router = createBrowserRouter([
       {
         path: "course/:courseId",
         element:<UpdateCourse/>
-      }
+      },
+      {
+        path: "course/:courseId/lecture",
+        element:<CreateLecture/>
+      },
+      {
+        path: "course/:courseId/lecture/:lectureId",
+        element:<EditLecture/>
+      },
     ]
   }
 ])

@@ -96,7 +96,7 @@ const Course = () => {
           {course?.map((course) => (
             <TableRow key={course._id}>
               <TableCell className="md:w-[300px] flex items-center gap-2 ">
-                <img src={course?.courseThumbnail} alt="" />
+                <img src={course?.courseThumbnail} alt="Thumbnail" className='w-20 hidden md:block rounded-sm'/>
                 {course.courseTitle}
               </TableCell>
               <TableCell className="font-medium text-center">{course.coursePrice || "NA"}</TableCell>

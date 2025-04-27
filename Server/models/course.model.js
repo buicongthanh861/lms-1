@@ -5,7 +5,7 @@ const courseSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    subTitle:{type:String},
+    subTitle: {type:String},
     description:{type:String},
     category:{
         type:String,
@@ -13,13 +13,13 @@ const courseSchema = new mongoose.Schema({
     },
     courseLevel:{
         type:String,
-        enum:['Beginner','Medium','Advance']
+        enum:['Beginner', "Medium", "Advance"]
     },
     coursePrice:{
         type:Number
     },
     courseThumbnail:{
-        type:String,
+        type:String
     },
     enrolledStudents:[
         {
@@ -27,15 +27,15 @@ const courseSchema = new mongoose.Schema({
             ref:"User"
         }
     ],
-    lecture:[
+    lectures:[
         {
             type:mongoose.Schema.Types.ObjectId,
             ref:"Lecture"
         }
     ],
     creator:{
-            type:mongoose.Schema.Types.ObjectId,
-            ref:"User"
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"User"
     },
     isPublished:{
         type:Boolean,
@@ -43,5 +43,5 @@ const courseSchema = new mongoose.Schema({
     }
 },{timestamps:true})
 
-export const Course = mongoose.model("Course",courseSchema)
+export const Course = mongoose.model("Course", courseSchema)
 

@@ -1,6 +1,10 @@
 import CourseCard from '@/components/CourseCard'
-import React from 'react'
+import { setCourse } from '@/redux/courseSlice'
+import axios from 'axios'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
+// Danh sách các khóa học mẫu
 export const coursesJson = [
   {
     "id": 1,
@@ -37,47 +41,40 @@ export const coursesJson = [
     "title": "WordPress cho người mới bắt đầu",
     "description": "Học cách tạo và quản lý website bằng WordPress, bao gồm themes, plugins và SEO.",
     "image": "https://example.com/images/wordpress-course.jpg"
-  },
-  {
-    "id": 7,
-    "title": "Khóa học Digital Marketing chuyên sâu",
-    "description": "Khám phá các chiến lược digital marketing bao gồm SEO, mạng xã hội, email marketing và quảng cáo PPC.",
-    "image": "https://example.com/images/digital-marketing-course.jpg"
-  },
-  {
-    "id": 8,
-    "title": "Khóa học cấp tốc Tailwind CSS",
-    "description": "Học cách sử dụng Tailwind CSS để tạo website đẹp, responsive với các lớp utility-first.",
-    "image": "https://example.com/images/tailwind-course.jpg"
-  },
-  {
-    "id": 9,
-    "title": "Xây dựng Hệ thống Quản lý Học tập (LMS) với MERN",
-    "description": "Tạo một Hệ thống Quản lý Học tập sử dụng React, Node.js, Express.js và MongoDB.",
-    "image": "https://example.com/images/lms-course.jpg"
-  },
-  {
-    "id": 10,
-    "title": "Các mẫu JavaScript nâng cao",
-    "description": "Đào sâu vào JavaScript với các khái niệm nâng cao như closures, kế thừa nguyên mẫu và các mẫu thiết kế.",
-    "image": "https://example.com/images/advanced-js-course.jpg"
   }
 ]
 
-
 const Courses = () => {
+  const dispatch = useDispatch()
+  const {course} = useSelector(store => store.course)
+
+  // Gọi API để lấy danh sách khóa học đã xuất bản
+  useEffect(()=> {
+    const getAllPublishedCourse = async ()=> {
+      try {
+        const res = await axios.get(`http://localhost:8080/api/course/published-courses`, {withCredentials:true})
+        if(res.data.success){
+          dispatch(setCourse(res.data.courses))
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getAllPublishedCourse()
+  }, []) // Thêm mảng phụ thuộc rỗng để chỉ chạy 1 lần khi mount
+
   return (
     <div className='bg-gray-100 pt-14'>
       <div className='min-h-screen max-w-7xl mx-auto py-10'>
         <div className='px-4'>
-          <h1 className='text-4xl font-bold text-center text-gray-800 mb-4'>Cac Khoa Hoc</h1>
-          <p className='text-center text-gray-600 mb-12'>"Khám phá các khóa học được chọn lọc của chúng tôi để nâng cao kỹ năng và sự nghiệp của bạn. Dù bạn là người mới bắt đầu hay chuyên gia, chúng tôi đều có khóa học phù hợp cho mọi người."</p>
+          <h1 className='text-4xl font-bold text-center text-gray-800 mb-4'>Danh Sách Khóa Học</h1>
+          <p className='text-center text-gray-600 mb-12'>Khám phá các khóa học được tuyển chọn của chúng tôi để nâng cao kỹ năng và sự nghiệp. Dù bạn là người mới bắt đầu hay chuyên gia, chúng tôi đều có khóa học phù hợp.</p>
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
-            {
-              coursesJson?.map((course) => {
-                return <CourseCard course={course} />
+             {
+              course?.map((course)=> {
+               return <CourseCard key={course.id} course={course}/>
               })
-            }
+             }
           </div>
         </div>
       </div>
@@ -86,3 +83,14 @@ const Courses = () => {
 }
 
 export default Courses
+
+
+
+
+
+
+
+
+
+
+// http://localhost:8080/api/course/published-courses
