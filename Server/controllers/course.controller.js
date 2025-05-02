@@ -133,6 +133,37 @@ export const getCourseById = async(req,res)=> {
     }
 }
 
+export const deleteCourse = async (req, res) => {
+    try {
+      const { courseId } = req.params;
+  
+      // Xóa các lecture liên quan trước
+      const course = await Course.findById(courseId);
+      if (!course) {
+        return res.status(404).json({
+          message: "Course not found",
+          success: false,
+        });
+      }
+  
+      await Lecture.deleteMany({ _id: { $in: course.lectures } });
+  
+      // Sau đó xóa khóa học
+      await Course.findByIdAndDelete(courseId);
+  
+      return res.status(200).json({
+        success: true,
+        message: "Course and its lectures deleted successfully",
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: "Failed to delete course",
+        success: false,
+      });
+    }
+  };
+
 //lecture controllers
 
 export const createLecture = async(req, res)=>{
@@ -188,41 +219,46 @@ export const getCourseLecture = async (req, res) => {
 
 export const editLecture = async (req, res) => {
     try {
-        const {lectureTitle, videoInfo, isPreviewFree} = req.body
-        const {courseId, lectureId} = req.params;
+        const { lectureTitle, videoInfo, isPreviewFree } = req.body;
+        const { courseId, lectureId } = req.params;
+
+        console.log("📦 Incoming videoInfo:", videoInfo); // DEBUG
+
         const lecture = await Lecture.findById(lectureId);
-        if(!lecture){
+        if (!lecture) {
             return res.status(404).json({
-                message:"Lecture not found!"
-            })
+                message: "Lecture not found!",
+            });
         }
-        //update lecture
-        if(lectureTitle) lecture.lectureTitle = lectureTitle;
-        if(videoInfo?.videoUrl) lecture.videoUrl = videoInfo.videoUrl;
-        if(videoInfo?.publicId) lecture.publicId = videoInfo.publicId;
+
+        if (lectureTitle) lecture.lectureTitle = lectureTitle;
+        if (videoInfo?.videoUrl) lecture.videoUrl = videoInfo.videoUrl;
+        if (videoInfo?.publicId) lecture.publicId = videoInfo.publicId;
         lecture.isPreviewFree = isPreviewFree;
 
         await lecture.save();
 
         const course = await Course.findById(courseId);
-        if(course && !course.lectures.includes(lecture._id)){
+        if (course && !course.lectures.includes(lecture._id)) {
             course.lectures.push(lecture._id);
-            await course.save()
+            await course.save();
         }
+
         return res.status(200).json({
-            success:true,
+            success: true,
             lecture,
-            message:"Lecture updated successfully"
-        })
+            message: "Lecture updated successfully",
+        });
     } catch (error) {
         console.log(error);
         return res.status(500).json({
-            message:"Failed to edit lectures",
-            success:false
-        })
-        
+            message: "Failed to edit lectures",
+            success: false,
+        });
     }
-}
+};
+
+
 
 export const removeLecture = async(req,res)=>{
     try {
@@ -233,10 +269,9 @@ export const removeLecture = async(req,res)=>{
                 message:"Lecture not found!"
             })
         }
-        //remove the lecture refference from the associated course
         await Course.updateOne(
-            {lectures: lectureId}, //find the course that contains the lecture
-            {$pull: {lectures:lectureId}} //remove the lecture id from the lectures array
+            {lectures: lectureId}, 
+            {$pull: {lectures:lectureId}} 
         );
         return res.status(200).json({
             success:true,
