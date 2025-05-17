@@ -1,7 +1,9 @@
-import { configureStore,combineReducers } from '@reduxjs/toolkit'
+import { configureStore, combineReducers } from '@reduxjs/toolkit'
 import authSlice from './authSlice'
 import courseSlice from './courseSlice'
 import lectureSlice from './lectureSlice'
+import documentSlice from './documentSlice'
+
 import {
     persistReducer,
     FLUSH,
@@ -21,9 +23,9 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
     auth: authSlice,
-    course:courseSlice,
-    lecture:lectureSlice,
-
+    course: courseSlice,
+    lecture: lectureSlice,
+    document: documentSlice
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
@@ -38,6 +40,4 @@ const store = configureStore({
         }),
 })
 
-
-
-export default store;
+export default store
