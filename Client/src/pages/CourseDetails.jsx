@@ -70,7 +70,7 @@ const CourseDetails = () => {
   return (
     <div className="bg-gray-100 md:p-10 ">
       <Card className="max-w-7xl rounded-md mx-auto bg-white shadow-md pt-5 mt-14">
-        {/* Header */}
+        {/* Tiêu đề khóa học */}
         <div className="px-4 py-1">
           <div className="flex justify-between items-center">
             <div className="flex gap-2 items-center">
@@ -87,17 +87,17 @@ const CourseDetails = () => {
               </h1>
             </div>
             <Button className="bg-blue-500 hover:bg-blue-600">
-              Enroll Now
+              Đăng ký ngay
             </Button>
           </div>
         </div>
 
-        {/* Overview */}
+        {/* Tổng quan */}
         <div className="p-6">
           <div className="flex flex-col lg:flex-row lg:space-x-8">
             <img
               src={selectedCourse.courseThumbnail}
-              alt="Thumbnail"
+              alt="Ảnh đại diện"
               className="w-full lg:w-1/3 rounded-md mb-4 lg:mb-0"
             />
             <div>
@@ -109,7 +109,7 @@ const CourseDetails = () => {
                 dangerouslySetInnerHTML={{ __html: selectedCourse.description }}
               />
               <p className="text-gray-800 font-semibold">
-                ⭐⭐⭐⭐⭐ (4.8) | 1,200 reviews
+                ⭐⭐⭐⭐⭐ (4.8) | 1,200 đánh giá
               </p>
               <div className="mt-1">
                 <p className="text-2xl font-bold text-gray-800">
@@ -118,52 +118,51 @@ const CourseDetails = () => {
                 <p className="text-gray-500 line-through">₹599</p>
               </div>
               <ul className="mt-4 space-y-2 text-gray-600">
-                <li>✔ 30+ hours of video content</li>
-                <li>✔ Lifetime access to course materials</li>
-                <li>✔ Certificate of completion</li>
+                <li>✔ Hơn 30 giờ video bài giảng</li>
+                <li>✔ Truy cập trọn đời tài liệu</li>
+                <li>✔ Chứng chỉ hoàn thành</li>
               </ul>
             </div>
           </div>
         </div>
 
-        {/* Details */}
+        {/* Chi tiết */}
         <div className="p-6">
           <h2 className="text-xl font-bold text-gray-800 mb-4">
-            What You'll Learn
+            Bạn sẽ học được gì
           </h2>
           <ul className="list-disc pl-5 space-y-2 text-gray-700">
-            <li>Build dynamic web applications with React and Node.js</li>
-            <li>Deploy websites with modern tools like Vercel and Netlify</li>
-            <li>Understand REST APIs and database integration</li>
+            <li>Xây dựng web động với React và Node.js</li>
+            <li>Triển khai với các công cụ hiện đại như Vercel và Netlify</li>
+            <li>Hiểu về REST APIs và tích hợp cơ sở dữ liệu</li>
           </ul>
 
           <h2 className="text-xl font-bold text-gray-800 mt-6 mb-4">
-            Requirements
+            Yêu cầu
           </h2>
           <p className="text-gray-700">
-            Basic programming knowledge is helpful but not required.
+            Kiến thức lập trình cơ bản là lợi thế nhưng không bắt buộc.
           </p>
 
           <h2 className="text-xl font-bold text-gray-800 mt-6 mb-4">
-            Who This Course is For
+            Dành cho ai?
           </h2>
           <p className="text-gray-700">
-            Beginners, aspiring developers, and professionals looking to upgrade
-            skills.
+            Người mới bắt đầu, lập trình viên muốn nâng cao kỹ năng.
           </p>
         </div>
 
-        {/* Lectures */}
+        {/* Bài giảng */}
         <div className="flex flex-col md:flex-row justify-between gap-10 p-6">
           <div className="flex-1">
             <h2 className="text-xl font-bold text-gray-800">
-              Course Curriculum
+              Nội dung khóa học
             </h2>
             <p className="text-gray-700 italic my-2">
-              {courseLecture.length} Lectures
+              {courseLecture.length} bài giảng
             </p>
             {courseLecture.length === 0 ? (
-              <p className="text-gray-500">No lectures available yet.</p>
+              <p className="text-gray-500">Chưa có bài giảng nào.</p>
             ) : (
               <div className="space-y-4">
                 {courseLecture.map((lecture) => (
@@ -180,7 +179,7 @@ const CourseDetails = () => {
             )}
           </div>
 
-          {/* Player */}
+          {/* Trình phát video */}
           {selectedLecture && (
             <div className="w-full lg:w-1/3">
               <Card>
@@ -193,27 +192,27 @@ const CourseDetails = () => {
                         url={selectedLecture.videoUrl}
                         controls
                         onError={(e) =>
-                          console.log("Video error hoặc sai định dạng URL:", e)
+                          console.log("Lỗi video hoặc sai URL:", e)
                         }
                       />
                     ) : (
                       <div className="text-gray-500 text-center">
-                        Video not available for this lecture.
+                        Video không khả dụng cho bài giảng này.
                       </div>
                     )}
                   </div>
-                  <h1>{selectedLecture?.lectureTitle || "Lecture Title"}</h1>
+                  <h1>{selectedLecture?.lectureTitle || "Tiêu đề bài giảng"}</h1>
                   <Separator className="my-2" />
                   <p>
                     {selectedLecture?.description ||
-                      "Lecture description not available."}
+                      "Không có mô tả cho bài giảng này."}
                   </p>
                 </CardContent>
                 <CardFooter className="flex p-4">
                   <Button
                     onClick={() => navigate(`/course/${courseId}/documents`)}
                   >
-                    Continue Course
+                    Tiếp tục khóa học
                   </Button>
                 </CardFooter>
               </Card>
@@ -221,20 +220,20 @@ const CourseDetails = () => {
           )}
         </div>
 
-        {/* Instructor */}
+        {/* Giảng viên */}
         <div className="p-6">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">Instructor</h2>
+          <h2 className="text-xl font-bold text-gray-800 mb-4">Giảng viên</h2>
           <div className="flex items-center space-x-4">
             <img
               src={creatorInfo.photoUrl}
-              alt="Instructor"
+              alt="Giảng viên"
               className="w-16 h-16 rounded-full"
             />
             <div>
               <h3 className="text-lg font-bold text-gray-800">
                 {creatorInfo.name}
               </h3>
-              <p className="text-gray-600">Senior Full-Stack Developer</p>
+              <p className="text-gray-600">Lập trình viên Full-Stack cao cấp</p>
             </div>
           </div>
           <p className="text-gray-700 mt-4">{creatorInfo.description}</p>
