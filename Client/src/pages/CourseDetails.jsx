@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import axios from "axios";
-import { ArrowLeft, Lock, PlayCircle } from "lucide-react";
+import { ArrowLeft, PlayCircle } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
 import { useNavigate, useParams } from "react-router-dom";
@@ -31,23 +31,23 @@ const CourseDetails = () => {
 
   const [courseLecture, setCourseLecture] = useState([]);
   const [selectedLecture, setSelectedLecture] = useState(null);
-  console.log("Selected lecture:", selectedLecture);
 
   useEffect(() => {
     const getCourseLecture = async () => {
       try {
         const res = await axios.get(
           `http://localhost:8000/api/v1/course/${courseId}/lecture`,
-          {
-            withCredentials: true,
-          }
+          { withCredentials: true }
         );
         if (res.data.success) {
-          setCourseLecture(res.data.lectures);
-          if (res.data.lectures.length > 0) {
-            setSelectedLecture(res.data.lectures[0]); // chỉ set ban đầu
+          const publicLectures = res.data.lectures.filter(
+            (lec) => lec.isPreviewFree
+          );
+          setCourseLecture(publicLectures);
+          if (publicLectures.length > 0) {
+            setSelectedLecture(publicLectures[0]);
           }
-          dispatch(setLecture(res.data.lectures));
+          dispatch(setLecture(publicLectures));
         }
       } catch (error) {
         console.log(error);
@@ -56,18 +56,17 @@ const CourseDetails = () => {
     getCourseLecture();
   }, [courseId, dispatch]);
 
-  // ❗ KHÔNG setSelectedLecture ở đây nữa
   useEffect(() => {
     if (lecture && lecture.length > 0) {
-      setCourseLecture(lecture);
-      // setSelectedLecture(lecture[0]); ❌ bỏ dòng này để tránh ghi đè
+      const publicLectures = lecture.filter((lec) => lec.isPreviewFree);
+      setCourseLecture(publicLectures);
     }
   }, [lecture]);
 
-  // ✅ Hàm xử lý khi click vào lecture
   const handleLectureClick = (lecture) => {
     setSelectedLecture(lecture);
   };
+
   return (
     <div className="bg-gray-100 md:p-10 ">
       <Card className="max-w-7xl rounded-md mx-auto bg-white shadow-md pt-5 mt-14">
@@ -173,13 +172,7 @@ const CourseDetails = () => {
                     className="flex items-center gap-3 bg-gray-200 p-4 rounded-md cursor-pointer hover:bg-gray-300 transition"
                     onClick={() => handleLectureClick(lecture)}
                   >
-                    <span>
-                      {lecture.isPreviewFree ? (
-                        <PlayCircle size={20} />
-                      ) : (
-                        <Lock size={20} />
-                      )}
-                    </span>
+                    <PlayCircle size={20} />
                     <p>{lecture.lectureTitle}</p>
                   </div>
                 ))}
@@ -187,38 +180,45 @@ const CourseDetails = () => {
             )}
           </div>
 
-          <div className="w-full lg:w-1/3">
-            <Card>
-              <CardContent className="p-4 flex flex-col">
-                <div className="w-full aspect-video mb-4">
-                  {selectedLecture?.videoUrl ? (
-                    <ReactPlayer
-                      width="100%"
-                      height="100%"
-                      url={selectedLecture.videoUrl}
-                      controls
-                      onError={(e) =>
-                        console.log("Video error hoặc sai định dạng URL:", e)
-                      }
-                    />
-                  ) : (
-                    <div className="text-gray-500 text-center">
-                      Video not available for this lecture.
-                    </div>
-                  )}
-                </div>
-                <h1>{selectedLecture?.lectureTitle || "Lecture Title"}</h1>
-                <Separator className="my-2" />
-                <p>
-                  {selectedLecture?.description ||
-                    "Lecture description not available."}
-                </p>
-              </CardContent>
-              <CardFooter className="flex p-4">
-                <Button>Continue Course</Button>
-              </CardFooter>
-            </Card>
-          </div>
+          {/* Player */}
+          {selectedLecture && (
+            <div className="w-full lg:w-1/3">
+              <Card>
+                <CardContent className="p-4 flex flex-col">
+                  <div className="w-full aspect-video mb-4">
+                    {selectedLecture?.videoUrl ? (
+                      <ReactPlayer
+                        width="100%"
+                        height="100%"
+                        url={selectedLecture.videoUrl}
+                        controls
+                        onError={(e) =>
+                          console.log("Video error hoặc sai định dạng URL:", e)
+                        }
+                      />
+                    ) : (
+                      <div className="text-gray-500 text-center">
+                        Video not available for this lecture.
+                      </div>
+                    )}
+                  </div>
+                  <h1>{selectedLecture?.lectureTitle || "Lecture Title"}</h1>
+                  <Separator className="my-2" />
+                  <p>
+                    {selectedLecture?.description ||
+                      "Lecture description not available."}
+                  </p>
+                </CardContent>
+                <CardFooter className="flex p-4">
+                  <Button
+                    onClick={() => navigate(`/course/${courseId}/documents`)}
+                  >
+                    Continue Course
+                  </Button>
+                </CardFooter>
+              </Card>
+            </div>
+          )}
         </div>
 
         {/* Instructor */}
