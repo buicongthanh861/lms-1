@@ -31,11 +31,20 @@ const CourseDocuments = () => {
     <div className="bg-gray-100 min-h-screen p-6 md:p-10 flex justify-center">
       <div className="w-full max-w-4xl">
         {/* Header */}
-        <div className="flex items-center gap-3 mb-6">
-          <Button variant="outline" onClick={() => navigate(-1)}>
-            <ArrowLeft size={16} />
+        <div className="relative mt-10 mb-16 h-20  flex items-center justify-center">
+          {/* Nút back - căn trái */}
+          <Button
+            variant="outline"
+            onClick={() => navigate(-1)}
+            className="absolute left-0 top-1/2 -translate-y-1/2 rounded-full p-2"
+          >
+            <ArrowLeft size={18} />
           </Button>
-          <h1 className="text-3xl font-bold text-gray-800">Course Documents</h1>
+
+          {/* Tiêu đề - căn giữa */}
+          <h1 className="text-center text-3xl font-bold text-gray-800">
+            Course Documents
+          </h1>
         </div>
 
         {/* Content */}
@@ -46,10 +55,17 @@ const CourseDocuments = () => {
         ) : (
           <div className="space-y-5">
             {documents.map((doc) => (
-              <Card key={doc._id} className="shadow-md hover:shadow-lg transition p-5">
+              <Card
+                key={doc._id}
+                className="shadow-md hover:shadow-lg transition p-5"
+              >
                 <CardContent>
-                  <h2 className="text-xl font-semibold text-gray-800">{doc.title || doc.doctitle}</h2>
-                  <p className="text-gray-600 mt-2">{doc.description || "No description available."}</p>
+                  <h2 className="text-xl font-semibold text-gray-800">
+                    {doc.title || doc.doctitle}
+                  </h2>
+                  <p className="text-gray-600 mt-2">
+                    {doc.description || "No description available."}
+                  </p>
                   <a
                     href={doc.documentUrl || doc.fileUrl}
                     target="_blank"
@@ -69,4 +85,3 @@ const CourseDocuments = () => {
 };
 
 export default CourseDocuments;
-
