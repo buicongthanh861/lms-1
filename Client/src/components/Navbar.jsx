@@ -29,37 +29,37 @@ const Navbar = () => {
     return (
         <div className='bg-gray-900 z-50 w-full py-3 fixed top-0'>
             <div className='max-w-7xl mx-auto flex justify-between'>
-                {/* logo section */}
+                {/* phần logo */}
                 <Link to='/'>
                     <div className='flex gap-1'>
                         <GraduationCap className='text-gray-300 w-10 h-10' />
                         <h1 className='text-gray-300 text-3xl font-bold'>VNUA</h1>
                     </div>
                 </Link>
-                {/* menu section */}
+                {/* phần menu */}
                 <nav>
                     <ul className='flex gap-7 text-xl items-center font-semibold text-white'>
-                        <Link to="/"><li className='cursor-pointer'>Home</li></Link>
-                        <Link to='/courses'><li className='cursor-pointer'>Courses</li></Link>
+                        <Link to="/"><li className='cursor-pointer'>Trang chủ</li></Link>
+                        <Link to='/courses'><li className='cursor-pointer'>Khoá học</li></Link>
 
                         {
                             !user ? (
                                 <div className='flex gap-3'>
-                                    <Link to='/login'><Button className="bg-blue-500 hover:bg-blue-600">Login</Button></Link>
-                                    <Link to='/signup'><Button className="bg-gray-700 hover:bg-gray-800">Signup</Button></Link>
+                                    <Link to='/login'><Button className="bg-blue-500 hover:bg-blue-600">Đăng nhập</Button></Link>
+                                    <Link to='/signup'><Button className="bg-gray-700 hover:bg-gray-800">Đăng ký</Button></Link>
                                 </div>
                             ) : (
                                 <div className='flex items-center gap-7'>
                                     {
-                                        user.role === 'instructor' && <Link to="/admin/dashboard"><li className='cursor-pointer'>Admin</li></Link>
+                                        user.role === 'instructor' && <Link to="/admin/dashboard"><li className='cursor-pointer'>Quản trị</li></Link>
                                     }
                                     <Link to='/profile'>
                                         <Avatar>
-                                            <AvatarImage src={user.photoUrl} alt="@shadcn" />
-                                            <AvatarFallback>CN</AvatarFallback>
+                                            <AvatarImage src={user.photoUrl} alt="Hồ sơ" />
+                                            <AvatarFallback>HS</AvatarFallback>
                                         </Avatar>
                                     </Link>
-                                    <Button onClick={logoutHandler} className="bg-blue-500 hover:bg-blue-600">Logout</Button>
+                                    <Button onClick={logoutHandler} className="bg-blue-500 hover:bg-blue-600">Đăng xuất</Button>
                                 </div>
                             )
                         }
