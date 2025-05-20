@@ -52,18 +52,27 @@ const CreateDocument = () => {
       )
 
       if (res.data.success) {
-        toast.success(res.data.message || "Document created")
-        navigate(`/admin/document/${courseId}`)
+        toast.success(res.data.message || "tài liệu đã được tạo")
+        navigate('/admin/document/')
       } else {
-        toast.error("Failed to create document")
+        toast.error("tạo tài liệu không thành công")
       }
     } catch (error) {
-      console.error('Error creating document:', error)
-      toast.error("Error creating document")
+      console.error('lỗi không tạo được tài liệu :', error)
+      toast.error("xảy ra lỗi khi tạo tài liệu")
     } finally {
       setLoading(false)
     }
   }
+ 
+// const goToDocumentPage = () => {
+//   if (courseId) {
+//     navigate('/admin/document')
+//   } else {
+//     toast.error("đã hủy tạo tài liệu !")
+//   }
+// }
+
 
   return (
     <div className='p-10 md:pr-20 min-h-screen'>
@@ -117,7 +126,7 @@ const CreateDocument = () => {
         </div>
 
         <div className='flex gap-2'>
-          <Button onClick={() => navigate(`/admin/document/${courseId}`)} variant="outline">
+          <Button onClick={() => navigate(`/admin/document/`)} variant="outline">
             Cancel
           </Button>
           <Button className="bg-blue-500 hover:bg-blue-600" disabled={loading} onClick={createDocumentHandler}>
@@ -132,4 +141,6 @@ const CreateDocument = () => {
 }
 
 export default CreateDocument
+
+
 
