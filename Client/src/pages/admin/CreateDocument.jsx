@@ -53,7 +53,7 @@ const CreateDocument = () => {
 
       if (res.data.success) {
         toast.success(res.data.message || "tài liệu đã được tạo")
-        navigate('/admin/document/')
+        navigate(`/admin/document/`)
       } else {
         toast.error("tạo tài liệu không thành công")
       }
@@ -64,14 +64,6 @@ const CreateDocument = () => {
       setLoading(false)
     }
   }
- 
-// const goToDocumentPage = () => {
-//   if (courseId) {
-//     navigate('/admin/document')
-//   } else {
-//     toast.error("đã hủy tạo tài liệu !")
-//   }
-// }
 
 
   return (
@@ -141,6 +133,4 @@ const CreateDocument = () => {
 }
 
 export default CreateDocument
-
-
 
