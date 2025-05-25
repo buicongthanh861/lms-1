@@ -26,7 +26,7 @@ const Sidebar = () => {
           <span>Course</span>
         </NavLink>
 
-        <NavLink
+        {/* <NavLink
           to='/admin/document'
           className={({ isActive }) =>
             `text-2xl text-gray-200 ${isActive ? 'bg-gray-950' : 'bg-transparent'} flex items-center gap-2 font-bold cursor-pointer p-3 rounded-2xl w-full`
@@ -34,7 +34,7 @@ const Sidebar = () => {
         >
           <FileText />
           <span>Document</span>
-        </NavLink>
+        </NavLink> */}
       </div>
     </div>
   )

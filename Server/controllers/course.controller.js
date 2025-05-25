@@ -2,7 +2,7 @@ import { Course } from "../models/course.model.js";
 import getDataUri from '../utils/dataUri.js';
 import cloudinary from '../utils/cloudinary.js'
 import {Lecture} from '../models/lecture.model.js';
-
+import {Document} from '../models/document.model.js';
 
 export const createCourse = async(req,res)=> {
     try {
@@ -309,3 +309,159 @@ export const togglePublishedCourse = async (req, res)=>{
         })
     }
 }
+
+export const createDocument = async (req, res) => {
+  try {
+    const { doctitle, description } = req.body;
+    const { courseId } = req.params;
+    const file = req.file;
+
+    if (!doctitle || !file || !courseId) {
+      return res.status(400).json({
+        message: "Document title, file, and courseId are required",
+        success: false,
+      });
+    }
+
+    // Tìm kiếm khoá học
+    const course = await Course.findById(courseId);
+    if (!course) {
+      return res.status(404).json({
+        message: "Course not found",
+        success: false,
+      });
+    }
+
+    // Upload file lên Cloudinary
+    const fileUri = getDataUri(file);
+    const uploaded = await cloudinary.uploader.upload(fileUri, {
+      resource_type: "auto",
+    });
+
+    // Tạo tài liệu mới
+    const document = await Document.create({
+      doctitle,
+      description,
+      fileUrl: uploaded.secure_url,
+      course: courseId,
+    });
+
+    // Gắn document vào course
+    course.documents.push(document._id);
+    await course.save();
+
+    return res.status(201).json({
+      success: true,
+      message: "Document uploaded successfully",
+      document,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Failed to upload document",
+      success: false,
+    });
+  }
+};
+
+export const getCourseDocuments = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+
+    // Kiểm tra xem khóa học có tồn tại không
+    const course = await Course.findById(courseId);
+    if (!course) {
+      return res.status(404).json({ message: "Course not found" });
+    }
+
+    // Tìm tất cả documents thuộc course
+    const documents = await Document.find({ course: courseId });
+
+    return res.status(200).json({
+      success: true,
+      documents,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Failed to get documents" });
+  }
+};
+
+export const editDocument = async (req, res) => {
+  try {
+    const { doctitle, description, fileInfo } = req.body; 
+    const { courseId, documentId } = req.params;
+
+    console.log("📦 Incoming fileInfo:", fileInfo); // DEBUG
+
+    const document = await Document.findById(documentId);
+    if (!document) {
+      return res.status(404).json({
+        message: "Document not found!",
+        success: false,
+      });
+    }
+
+    if (doctitle) document.doctitle = doctitle;
+    if (description !== undefined) document.description = description;
+
+    // Chỉ cập nhật fileUrl, bỏ publicId
+    if (fileInfo?.fileUrl) document.fileUrl = fileInfo.fileUrl;
+
+    await document.save();
+
+    const course = await Course.findById(courseId);
+    if (course && !course.documents.includes(document._id)) {
+      course.documents.push(document._id);
+      await course.save();
+    }
+
+    return res.status(200).json({
+      success: true,
+      document,
+      message: "Document updated successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Failed to edit document",
+      success: false,
+    });
+  }
+};
+
+export const removeDocument = async (req, res) => {
+  try {
+    const { documentId } = req.params;
+
+    // Xóa document theo ID
+    const document = await Document.findByIdAndDelete(documentId);
+
+    if (!document) {
+      return res.status(404).json({
+        message: "Document not found!",
+        success: false,
+      });
+    }
+
+    // Loại bỏ documentId khỏi mảng documents của course
+    await Course.updateOne(
+      { documents: documentId },
+      { $pull: { documents: documentId } }
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Document removed successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Failed to remove document",
+      success: false,
+    });
+  }
+};
+
+
+

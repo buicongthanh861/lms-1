@@ -33,6 +33,12 @@ const courseSchema = new mongoose.Schema({
             ref:"Lecture"
         }
     ],
+    documents: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Document"
+        }
+    ],
     creator:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"User"

@@ -13,8 +13,9 @@ const CourseDocuments = () => {
   useEffect(() => {
     const fetchDocuments = async () => {
       try {
+        // Sửa URL API cho đúng với backend của bạn
         const res = await axios.get(
-          `http://localhost:8000/api/v1/document/${courseId}/document`,
+          `http://localhost:8000/api/v1/course/${courseId}/document`,
           { withCredentials: true }
         );
         if (res.data.success) {
@@ -31,7 +32,7 @@ const CourseDocuments = () => {
     <div className="bg-gray-100 min-h-screen p-6 md:p-10 flex justify-center">
       <div className="w-full max-w-4xl">
         {/* Header */}
-        <div className="relative mt-10 mb-16 h-20  flex items-center justify-center">
+        <div className="relative mt-10 mb-16 h-20 flex items-center justify-center">
           {/* Nút back - căn trái */}
           <Button
             variant="outline"
@@ -61,13 +62,13 @@ const CourseDocuments = () => {
               >
                 <CardContent>
                   <h2 className="text-xl font-semibold text-gray-800">
-                    {doc.title || doc.doctitle}
+                    {doc.doctitle}
                   </h2>
                   <p className="text-gray-600 mt-2">
                     {doc.description || "No description available."}
                   </p>
                   <a
-                    href={doc.documentUrl || doc.fileUrl}
+                    href={doc.fileUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-600 underline mt-3 inline-block"

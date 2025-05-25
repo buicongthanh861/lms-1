@@ -20,6 +20,7 @@ import CourseDetails from "./pages/CourseDetails";
 import DocumentPage from "./pages/admin/DocumentPage";
 import CreateDocument from "./pages/admin/CreateDocument";
 import CourseDocuments from "./pages/CourseDocuments";
+import EditDocument from "./pages/admin/EditDocument";
 
 
 const router = createBrowserRouter([
@@ -120,12 +121,12 @@ const router = createBrowserRouter([
         element: <EditLecture />,
       },
       {
-        path: "course/:courseId/document/create",
+        path: "course/:courseId/document",
         element: <CreateDocument />,
       },
-      {
-        path: "document",
-        element: <DocumentPage />,
+       {
+        path: "course/:courseId/document/:documentId",
+        element: <EditDocument />,
       },
     ],
   },
