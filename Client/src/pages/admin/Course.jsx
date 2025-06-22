@@ -81,15 +81,15 @@ const Course = () => {
   })
   return (
     <div className='md:p-10 p-4  w-full h-screen'>
-      <Button className="bg-blue-500" onClick={() => navigate("create")}>Create Course</Button>
+      <Button className="bg-blue-500" onClick={() => navigate("create")}>Tạo khóa học</Button>
       <Table className="mt-10">
-        <TableCaption>A list of your recent course.</TableCaption>
+        <TableCaption>Danh sách khóa học gần đây của bạn</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px]">Course</TableHead>
-            <TableHead className="text-center">Price</TableHead>
-            <TableHead className="text-center">Status</TableHead>
-            <TableHead className="text-right">Action</TableHead>
+            <TableHead className="w-[100px]">Khóa học</TableHead>
+            <TableHead className="text-center">Giá</TableHead>
+            <TableHead className="text-center">Trạng thái</TableHead>
+            <TableHead className="text-right">Hành động</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -101,7 +101,7 @@ const Course = () => {
               </TableCell>
               <TableCell className="font-medium text-center">{course.coursePrice || "NA"}</TableCell>
               <TableCell className="text-center">
-                <Badge className={course.isPublished ? "bg-green-400" : "bg-red-400"}>{course.isPublished ? "Published" : "Draft"}
+                <Badge className={course.isPublished ? "bg-green-400" : "bg-red-400"}>{course.isPublished ? "Đã xuất bản" : "Nháp"}
                 </Badge>
               </TableCell>
               <TableCell className="text-right">

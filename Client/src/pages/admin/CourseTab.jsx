@@ -126,7 +126,7 @@ const CourseTab = () => {
   const deleteCourseHandler = async () => {
     if (
       !window.confirm(
-        "Are you sure you want to delete this course? This action cannot be undone."
+        "Bạn có chắc chắn muốn xóa khóa học này không? Hành động này sẽ không thể hoàn tác."
       )
     )
       return;
@@ -175,9 +175,9 @@ const CourseTab = () => {
     <Card>
       <CardHeader className="flex md:flex-row justify-between">
         <div>
-          <CardTitle>Basic course Information</CardTitle>
+          <CardTitle>Thông tin cơ bản của khóa học</CardTitle>
           <CardDescription>
-            Make changes to your courses here. Click save when you're done.
+            Chỉnh sửa thông tin khóa học tại đây. Nhấn lưu khi bạn hoàn tất.
           </CardDescription>
         </div>
         <div className="space-x-2">
@@ -189,21 +189,21 @@ const CourseTab = () => {
             }
             className="bg-gray-800"
           >
-            {selectedCourse.isPublished ? "UnPublish" : "Publish"}
+            {selectedCourse.isPublished ? "Ngừng xuất bản" : "Xuất bản"}
           </Button>
           <Button
             variant="destructive"
             onClick={deleteCourseHandler}
             disabled={loading}
           >
-            {loading ? "Removing..." : "Remove Course"}
+            {loading ? "Đang xóa..." : "Xóa khóa học"}
           </Button>
         </div>
       </CardHeader>
       <CardContent>
         <div className="space-y-4 mt-5">
           <div>
-            <Label>Title</Label>
+            <Label>Tiêu đề</Label>
             <Input
               value={input.courseTitle}
               onChange={changeEventHandler}
@@ -213,7 +213,7 @@ const CourseTab = () => {
             ></Input>
           </div>
           <div>
-            <Label>Subtitle</Label>
+            <Label>Phụ đề</Label>
             <Input
               value={input.subTitle}
               onChange={changeEventHandler}
@@ -223,23 +223,23 @@ const CourseTab = () => {
             ></Input>
           </div>
           <div>
-            <Label>Description</Label>
+            <Label>Mô tả</Label>
             <RichTextEditor input={input} setInput={setInput} />
             {/* <Input input={input} setInput={setInput} type="text" name="Description" placeholder="Ex. Description course"></Input> */}
           </div>
           <div className="flex md:flex-row flex-wrap gap-1 items-center md:gap-5">
             <div>
-              <Label>Category</Label>
+              <Label>Danh mục</Label>
               <Select
                 defaultValue={input.category}
                 onValueChange={selectCategory}
               >
                 <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Select a category" />
+                  <SelectValue placeholder="Chọn danh mục" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectLabel>Category</SelectLabel>
+                    <SelectLabel>Danh mục</SelectLabel>
                     <SelectItem value="Next Js">Next Js</SelectItem>
                     <SelectItem value="Data Science">Data Science</SelectItem>
                     <SelectItem value="Frontend Development">
@@ -260,7 +260,7 @@ const CourseTab = () => {
               </Select>
             </div>
             <div>
-              <Label>Course Level</Label>
+              <Label>Trình độ</Label>
               <Select
                 defaultValue={input.courseLevel}
                 onValueChange={selectCourseLevel}
@@ -270,16 +270,16 @@ const CourseTab = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectLabel>Course Level</SelectLabel>
-                    <SelectItem value="Beginner">Beginner</SelectItem>
-                    <SelectItem value="Medium">Medium</SelectItem>
-                    <SelectItem value="Advance">Advance</SelectItem>
+                    <SelectLabel>Trình độ</SelectLabel>
+                    <SelectItem value="Beginner">Người mới bắt đầu</SelectItem>
+                    <SelectItem value="Medium">Trung bình</SelectItem>
+                    <SelectItem value="Advance">Nâng cao</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
             </div>
             <div>
-              <Label>Price in (INR)</Label>
+              <Label>Giá (INR)</Label>
               <Input
                 type="number"
                 name="coursePrice"
@@ -291,7 +291,7 @@ const CourseTab = () => {
             </div>
           </div>
           <div>
-            <Label>Course Thumbnail</Label>
+            <Label>Ảnh đại diện khóa học</Label>
             <Input
               type="file"
               id="file"
@@ -320,11 +320,11 @@ const CourseTab = () => {
               {loading ? (
                 <>
                   <Loader2 className="mr-2 w-4 h-4 animate-spin">
-                    Please wait
+                   Vui lòng chờ...
                   </Loader2>
                 </>
               ) : (
-                "Save"
+                "Lưu"
               )}
             </Button>
           </div>

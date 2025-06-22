@@ -7,12 +7,12 @@ const UpdateCourse = () => {
   return (
     <div className='md:p-10 p-4'>
       <div className='flex items-center mb-5 gap-2'>
-        <h1 className='font-bold text-xl flex-grow'>Add detail information regarding course</h1>
+        <h1 className='font-bold text-xl flex-grow'>Thêm thông tin chi tiết cho khóa học</h1>
         <Link to="lecture">
-          <Button className="hover:text-blue-600">Go to lectures page</Button>
+          <Button className="hover:text-blue-600">Chuyển đến trang bài giảng</Button>
         </Link>
         <Link to="document">
-          <Button className="hover:text-blue-600">Go to document page</Button>
+          <Button className="hover:text-blue-600">Chuyển đến trang tài liệu</Button>
         </Link>
       </div>
       <CourseTab/>

@@ -463,5 +463,34 @@ export const removeDocument = async (req, res) => {
   }
 };
 
+export const searchCourse = async (req, res) => {
+  try {
+    const { keyword } = req.query;
+
+    if (!keyword || keyword.trim() === "") {
+      return res.status(400).json({
+        message: "Search keyword is required",
+        success: false,
+      });
+    }
+
+    const courses = await Course.find({
+      isPublished: true, // chỉ hiển thị khoá học đã public
+      courseTitle: { $regex: keyword, $options: "i" }, // không phân biệt hoa thường
+    }).select("courseTitle _id courseThumbnail subTitle"); // chọn thêm trường hiển thị gợi ý
+
+    return res.status(200).json({
+      success: true,
+      courses,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to search courses",
+    });
+  }
+};
+
 
 

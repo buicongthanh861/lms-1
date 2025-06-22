@@ -90,8 +90,8 @@ const Courses = () => {
     <div className='bg-gray-100 pt-14'>
       <div className='min-h-screen max-w-7xl mx-auto py-10'>
         <div className='px-4'>
-          <h1 className='text-4xl font-bold text-center text-gray-800 mb-4'>Our Courses</h1>
-          <p className='text-center text-gray-600 mb-12'>Explore our curated courses to boost your skills and career. Whether you're a beginner or an expert, we have something for everyone.</p>
+          <h1 className='text-4xl font-bold text-center text-gray-800 mb-4'> Các khóa học của chúng tôi</h1>
+          <p className='text-center text-gray-600 mb-12'>  Khám phá các khóa học được chọn lọc kỹ lưỡng để nâng cao kỹ năng và sự nghiệp của bạn. Dù bạn là người mới bắt đầu hay chuyên gia, chúng tôi đều có khóa học phù hợp.</p>
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
              {
               course?.map((course)=> {

@@ -1,27 +1,27 @@
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import { toast } from "sonner";
+import { setDocument } from "@/redux/documentSlice";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { setDocument } from "@/redux/documentSlice"; // Giả sử bạn có slice document tương tự lectureSlice
-import axios from "axios";
-import { Edit, Loader2 } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 const CreateDocument = () => {
   const params = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // State form
   const [doctitle, setDoctitle] = useState("");
   const [description, setDescription] = useState("");
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
+  // Biến trạng thái loading riêng cho từng document khi xóa
+  const [removeLoading, setRemoveLoading] = useState({});
 
-  // Lấy document list từ redux
   const { document } = useSelector((store) => store.document);
 
   // Tạo tài liệu mới
@@ -30,7 +30,6 @@ const CreateDocument = () => {
       toast.error("Vui lòng nhập tiêu đề và chọn file");
       return;
     }
-
     try {
       setLoading(true);
       const formData = new FormData();
@@ -39,7 +38,7 @@ const CreateDocument = () => {
       formData.append("file", file);
 
       const res = await axios.post(
-        `http://localhost:8000/api/v1/course/${params?.courseId}/document`,
+        `http://localhost:8000/api/v1/course/${params.courseId}/document`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -49,8 +48,8 @@ const CreateDocument = () => {
 
       if (res.data.success) {
         toast.success(res.data.message);
-        getDocuments(); // Tải lại danh sách tài liệu sau khi thêm
-        setDoctitle(""); // Reset input
+        await getDocuments(); // Đợi load lại danh sách mới xong rồi mới reset form
+        setDoctitle("");
         setDescription("");
         setFile(null);
       } else {
@@ -64,11 +63,11 @@ const CreateDocument = () => {
     }
   };
 
-  // Lấy danh sách tài liệu
+  // Lấy danh sách tài liệu theo courseId
   const getDocuments = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:8000/api/v1/course/${params?.courseId}/document`,
+        `http://localhost:8000/api/v1/course/${params.courseId}/document`,
         {
           withCredentials: true,
         }
@@ -78,12 +77,47 @@ const CreateDocument = () => {
       }
     } catch (error) {
       console.error(error);
+      toast.error("Có lỗi khi tải danh sách tài liệu");
+    }
+  };
+
+  // Xóa document theo id
+  const removeDocumentHandler = async (documentId, e) => {
+    // e.preventDefault() và e.stopPropagation() đảm bảo không gây reload hoặc chuyển trang
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    try {
+      setRemoveLoading((prev) => ({ ...prev, [documentId]: true }));
+
+      const res = await axios.delete(
+        `http://localhost:8000/api/v1/course/${params.courseId}/document/${documentId}`,
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (res.data.success) {
+        toast.success(res.data.message);
+        await getDocuments(); // Đợi tải lại danh sách mới rồi mới tắt loading
+      } else {
+        toast.error(res.data.message || "Xóa tài liệu thất bại");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Có lỗi xảy ra khi xóa tài liệu");
+    } finally {
+      setRemoveLoading((prev) => ({ ...prev, [documentId]: false }));
     }
   };
 
   useEffect(() => {
-    getDocuments();
-  }, []);
+    if (params.courseId) {
+      getDocuments();
+    }
+  }, [params.courseId]);
 
   return (
     <div className="p-4 md:p-10 md:pr-20 h-screen">
@@ -155,19 +189,27 @@ const CreateDocument = () => {
             <div
               key={doc._id || index}
               className="flex items-center justify-between bg-[#F7F9FA] px-4 py-2 rounded-md my-2 cursor-pointer hover:bg-blue-50"
-              onClick={() => navigate(`${doc._id}`)}
+              onClick={() =>
+                navigate(`/admin/course/${params.courseId}/document/${doc._id}`)
+              }
             >
               <h3 className="font-bold text-gray-800">
                 Document - {index + 1}: {doc.doctitle}
               </h3>
-              <Edit
-                onClick={(e) => {
-                  e.stopPropagation();
-                  navigate(`${doc._id}`);
-                }}
-                size={20}
-                className="cursor-pointer text-gray-600 hover:text-blue-600"
-              />
+              <button
+                disabled={removeLoading[doc._id]}
+                onClick={(e) => removeDocumentHandler(doc._id, e)}
+                className="text-red-600 hover:text-red-800 font-semibold"
+              >
+                {removeLoading[doc._id] ? (
+                  <>
+                    <Loader2 className="mr-1 h-4 animate-spin inline-block" />
+                    Đang xóa
+                  </>
+                ) : (
+                  "Xóa"
+                )}
+              </button>
             </div>
           ))
         ) : (

@@ -61,10 +61,10 @@ const DocumentPage = () => {
       if (data.success) {
         setDocuments(prev => prev.filter(doc => doc._id !== id))
       } else {
-        alert('Failed to delete document')
+        alert('Không thể tải tài liệu')
       }
     } catch (error) {
-      alert('Error deleting document')
+      alert('Có lỗi khi xóa tài liệu')
     }
   }
 

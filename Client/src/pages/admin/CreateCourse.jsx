@@ -49,33 +49,33 @@ const CreateCourse = () => {
     }
     return (
         <div className='p-10 md:pr-20 h-screen'>
-            <h1 className='text-2xl font-bold'>Lets Add <span className='text-blue-500'>Courses</span></h1>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex eius necessitatibus fugit vel distinctio architecto, ut ratione rem nobis eaque?</p>
+            <h1 className='text-2xl font-bold'> Thêm mới <span className='text-blue-500'>khóa học</span></h1>
+            <p> Nhập thông tin bên dưới để tạo khóa học mới.</p>
             <div className='mt-10'>
                 <div>
-                    <Label>Title</Label>
+                    <Label>Tiêu đề khóa học</Label>
                     <Input 
                     type="text" 
                     value={courseTitle} 
                     onChange={(e)=>setCourseTitle(e.target.value)} 
-                    placeholder="Your Course Name" 
+                    placeholder="Nhập tên khóa học"
                     className="bg-white" 
                     />
                 </div>
                 <div className='mt-4 mb-5'>
-                    <Label>Category</Label>
+                    <Label>Danh mục</Label>
                     <Select onValueChange={getSelectedCategory}>
                         <SelectTrigger className="w-[180px] bg-white">
-                            <SelectValue placeholder="Select a category" />
+                            <SelectValue placeholder="Chọn danh mục" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
-                                <SelectLabel>Category</SelectLabel>
+                                <SelectLabel>Danh mục</SelectLabel>
                                 <SelectItem value="Next Js">Next Js</SelectItem>
-                                <SelectItem value="Data Science">Data Science</SelectItem>
-                                <SelectItem value="Frontend Development">Frontend Development</SelectItem>
-                                <SelectItem value="Backend Development">Backend Development</SelectItem>
-                                <SelectItem value="MernStack Development">MernStack Development</SelectItem>
+                                <SelectItem value="Data Science">Khoa học dữ liệu</SelectItem>
+                                <SelectItem value="Frontend Development">Lập trình Frontend</SelectItem>
+                                <SelectItem value="Backend Development">Lập trình Backend</SelectItem>
+                                <SelectItem value="MernStack Development">Phát triển MERN Stack</SelectItem>
                                 <SelectItem value="Javascript">Javascript</SelectItem>
                                 <SelectItem value="Python">Python</SelectItem>
                                 <SelectItem value="Docker">Docker</SelectItem>
@@ -88,7 +88,7 @@ const CreateCourse = () => {
                     <Button onClick={()=>navigate('/admin/course')} variant="outline">Cancel</Button>
                     <Button className="bg-blue-500 hover:bg-blue-600 " disabled={loading} onClick={createCourseHandler}>
                     {
-                        loading ? <><Loader2 className='animate-spin mr-1 h-4 w-4 '/>Please wait</> : "Create"
+                        loading ? <><Loader2 className='animate-spin mr-1 h-4 w-4 '/>Vui lòng đợi...</> :  "Tạo khóa học"
                     }
                     </Button>
                 </div>

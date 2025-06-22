@@ -13,7 +13,7 @@ const Sidebar = () => {
           }
         >
           <ChartColumnBig />
-          <span>Dashboard</span>
+          <span>Bảng điều khiển</span>
         </NavLink>
 
         <NavLink
@@ -23,7 +23,7 @@ const Sidebar = () => {
           }
         >
           <FolderPlus />
-          <span>Course</span>
+          <span>Khóa học</span>
         </NavLink>
 
         {/* <NavLink

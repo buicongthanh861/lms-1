@@ -10,10 +10,14 @@ const CourseDocuments = () => {
   const [documents, setDocuments] = useState([]);
   const navigate = useNavigate();
 
+  // Hàm kiểm tra file có phải ảnh không (dựa trên đuôi file)
+  const isImage = (url) => {
+    return /\.(jpeg|jpg|gif|png|bmp|webp|svg)$/i.test(url);
+  };
+
   useEffect(() => {
     const fetchDocuments = async () => {
       try {
-        // Sửa URL API cho đúng với backend của bạn
         const res = await axios.get(
           `http://localhost:8000/api/v1/course/${courseId}/document`,
           { withCredentials: true }
@@ -22,7 +26,7 @@ const CourseDocuments = () => {
           setDocuments(res.data.documents);
         }
       } catch (err) {
-        console.error("Failed to fetch documents:", err);
+        console.error("Lỗi khi tải tài liệu:", err);
       }
     };
     fetchDocuments();
@@ -44,14 +48,14 @@ const CourseDocuments = () => {
 
           {/* Tiêu đề - căn giữa */}
           <h1 className="text-center text-3xl font-bold text-gray-800">
-            Course Documents
+            Tài liệu khóa học
           </h1>
         </div>
 
         {/* Content */}
         {documents.length === 0 ? (
           <p className="text-center text-gray-500 mt-10 text-lg">
-            No documents found for this course.
+          Không có tài liệu nào cho khóa học này.
           </p>
         ) : (
           <div className="space-y-5">
@@ -65,16 +69,21 @@ const CourseDocuments = () => {
                     {doc.doctitle}
                   </h2>
                   <p className="text-gray-600 mt-2">
-                    {doc.description || "No description available."}
+                    {doc.description ||  "Không có mô tả."}
                   </p>
-                  <a
-                    href={doc.fileUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 underline mt-3 inline-block"
-                  >
-                    View Document
-                  </a>
+
+                  {doc.fileUrl ? (
+                    <a
+                      href={doc.fileUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-3 text-blue-600 underline block"
+                    >
+                      Mở tài liệu
+                    </a>
+                  ) : (
+                    <p className="text-red-600 mt-3">Không có file đính kèm.</p>
+                  )}
                 </CardContent>
               </Card>
             ))}

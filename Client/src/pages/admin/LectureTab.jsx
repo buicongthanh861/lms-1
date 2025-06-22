@@ -146,9 +146,9 @@ const LectureTab = () => {
     <Card>
       <CardHeader className="flex justify-between">
         <div>
-          <CardTitle>Edit Lecture</CardTitle>
+          <CardTitle>Chỉnh sửa bài giảng</CardTitle>
           <CardDescription>
-            Make changes and click save when done.
+             Chỉnh sửa thông tin bài giảng và nhấn "Lưu" khi hoàn tất.
           </CardDescription>
         </div>
         <div className="flex items-center gap-2">
@@ -160,20 +160,20 @@ const LectureTab = () => {
             {removeLoading ? (
               <>
                 <Loader2 className="mr-1 w-4 h-4 animate-spin" />
-                Please wait
+                 Vui lòng chờ...
               </>
             ) : (
-              "Remove Lecture"
+               "Xóa bài giảng"
             )}
           </Button>
         </div>
       </CardHeader>
       <CardContent>
         <div>
-          <Label>Title</Label>
+          <Label>Tiêu đề bài giảng</Label>
           <Input
             type="text"
-            placeholder="Ex. Introduction to javascript"
+            placeholder="VD: Giới thiệu về Javascript"
             value={lectureTitle}
             onChange={(e) => setLectureTitle(e.target.value)}
           />
@@ -195,12 +195,12 @@ const LectureTab = () => {
             onCheckedChange={setIsFree}
             className="bg-gray-800"
           />
-          <Label>Is this video FREE</Label>
+          <Label>Video này có miễn phí không?</Label>
         </div>
         {mediaProgress && (
           <div className="my-4">
             <Progress value={uploadProgress} />
-            <p>{uploadProgress}% uploaded</p>
+            <p>{uploadProgress}% Đang tải lên</p>
           </div>
         )}
         <div className="mt-4">
@@ -212,15 +212,15 @@ const LectureTab = () => {
             {loading ? (
               <>
                 <Loader2 className="mr-1 w-4 h-4 animate-spin" />
-                Please wait
+                Vui lòng chờ...
               </>
             ) : mediaProgress ? (
               <>
                 <Loader2 className="mr-1 w-4 h-4 animate-spin" />
-                Uploading video...
+                 Đang tải video...
               </>
             ) : (
-              "Update Lecture"
+              "Cập nhật bài giảng"
             )}
           </Button>
         </div>
